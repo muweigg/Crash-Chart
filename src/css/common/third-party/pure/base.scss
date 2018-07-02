@@ -1,0 +1,28 @@
+/*!
+Pure v1.0.0
+Copyright 2013 Yahoo!
+Licensed under the BSD License.
+https://github.com/yahoo/pure/blob/master/LICENSE.md
+*/
+/**
+ * Extra rules that Pure adds on top of Normalize.css
+ */
+
+/**
+ * Always hide an element when it has the `hidden` HTML attribute.
+ */
+
+.hidden,
+[hidden] {
+    display: none !important;
+}
+
+/**
+ * Add this class to an image to make it fit within it's fluid parent wrapper while maintaining
+ * aspect ratio.
+ */
+.pure-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}

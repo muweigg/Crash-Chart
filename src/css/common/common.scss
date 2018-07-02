@@ -1,0 +1,17 @@
+@import './third-party/pure/pure';
+@import './_/icons';
+
+i.icon {
+    display: inline-block;
+}
+
+@each $icon in $spritesheet-sprites {
+    $icon-name: nth($icon, 10);
+    .icon-#{$icon-name} {
+        @include sprite($icon);
+    }
+}
+
+[v-cloak], [hidden], .hidden {
+    display: none;
+}

@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "lib": [
+            "dom",
+            "esnext"
+        ],
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "sourceMap": true,
+        "importHelpers": true,
+        "allowJs": true
+    },
+    "exclude": [
+        "node_modules",
+        "dist"
+    ],
+    "compileOnSave": false,
+    "buildOnSave": false
+}
