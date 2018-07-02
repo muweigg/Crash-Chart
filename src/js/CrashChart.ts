@@ -132,8 +132,6 @@ class CrashChart {
 
         let ySpacing: number = this.calcSpacing(this.yAxisSpacing / this.yScale);
         let xSpacing: number = this.calcSpacing(this.xAxisSpacing / this.xScale);
-        console.log('ySpacing: ', ySpacing);
-        console.log('xSpacing: ', xSpacing);
 
         let point: number = this.yAxisBase + ySpacing,
             time: number = xSpacing,
