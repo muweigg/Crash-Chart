@@ -108,7 +108,7 @@ class CrashChart {
         return Math.pow(Math.E, t * this.BASE);
     }
 
-    getDurationByCrashPoint(p: number) {
+    getDurationByPoint(p: number) {
         return Math.floor((Math.log(p) / Math.log(Math.E)) / this.BASE);
     }
 
@@ -132,6 +132,8 @@ class CrashChart {
 
         let ySpacing: number = this.calcSpacing(this.yAxisSpacing / this.yScale);
         let xSpacing: number = this.calcSpacing(this.xAxisSpacing / this.xScale);
+        console.log('ySpacing: ', ySpacing);
+        console.log('xSpacing: ', xSpacing);
 
         let point: number = this.yAxisBase + ySpacing,
             time: number = xSpacing,
@@ -236,7 +238,8 @@ class CrashChart {
     }
 
     start(time: number = 0) {
-        if (this.rendering || this.waiting) return;
+        if (this.rendering) return;
+        if (this.waiting) this.reset();
         this.init(time);
         this.rAFId = requestAnimationFrame(this.render.bind(this));
         this.status = 'runing';
@@ -250,7 +253,7 @@ class CrashChart {
         cancelAnimationFrame(this.rAFId);
         clearInterval(this.timerId);
 
-        this.init(this.getDurationByCrashPoint(crashPoint || this.point));
+        this.init(this.getDurationByPoint(crashPoint || this.point));
         this.status = 'stop';
         this.drawChart();
 
