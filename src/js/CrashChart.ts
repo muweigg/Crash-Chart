@@ -231,7 +231,7 @@ class CrashChart {
     render() {
         this.rAFId = requestAnimationFrame(this.render.bind(this));
         this.drawChart();
-        if (this.point >= this.maxPoint) this.stop();
+        if (this.point >= this.maxPoint) this.stop(this.maxPoint);
     }
 
     waitRender() {
