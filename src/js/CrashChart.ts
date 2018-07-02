@@ -66,11 +66,10 @@ class CrashChart {
             maxPoint: 100,
             crashedText: 'Crashed',
             waitingText: 'Next Round in...',
-            width, height,
         }, options);
 
-        this.canvas.width = this.options.width;
-        this.canvas.height = this.options.height;
+        this.canvas.width = width;
+        this.canvas.height = height;
 
         this.STEP = this.options.step;
         this.STEP_TIME = this.options.stepTime;
@@ -293,6 +292,14 @@ class CrashChart {
 
         this.rendering = false;
         this.waiting = false;
+    }
+
+    resize() {
+        const { width, height } = this.container.getBoundingClientRect();
+        this.canvas.width = width;
+        this.canvas.height = height;
+        if (!this.rendering && !this.waiting)
+            this.drawChart();
     }
 }
 
