@@ -36,6 +36,7 @@ class CrashChart {
     yScale: number = 1;
     xScale: number = 1;
     waitTime: number = 2000;
+    status: string = '';
 
     y_axis_point: Array<any> = [];
     x_axis_point: Array<any> = [];
@@ -195,38 +196,37 @@ class CrashChart {
         this.ctx.stroke();
     }
 
-    drawRuningText() {
-        Object.assign(this.ctx, this.axisStyle, { font: "48px Verdana", strokeStyle: '#2ac26c', fillStyle: '#2ac26c' });
+    drawText() {
+        const fontStyle: any = {
+            'runing' : { font: "48px Verdana", strokeStyle: '#2ac26c', fillStyle: '#2ac26c' },
+            'waiting': { font: "32px Verdana", strokeStyle: '#ffffff', fillStyle: '#ffffff' },
+            'stop'   : { font: "48px Verdana", strokeStyle: '#ff3737', fillStyle: '#ff3737' },
+        };
 
-        this.ctx.fillText(`${String(this.point.toFixed(2))}x`, this.canvas.width / 2, this.canvas.height / 2);
-    }
-
-    drawStopText() {
-        Object.assign(this.ctx, this.axisStyle, { font: "48px Verdana", strokeStyle: '#ff3737', fillStyle: '#ff3737' });
+        Object.assign(this.ctx, this.axisStyle, fontStyle[this.status]);
         const elemenHeight = this.getElemenHeight(this.ctx.font) / 2;
-        this.ctx.fillText(this.options.crashedText, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
-        this.ctx.fillText(`${String(this.point.toFixed(2))}x`, this.canvas.width / 2, this.canvas.height / 2 + elemenHeight);
+
+        if (this.status === 'runing') {
+            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, this.canvas.width / 2, this.canvas.height / 2);
+        } else if (this.status === 'waiting') {
+            this.ctx.fillText(this.options.waitingText, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
+            this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}s`, this.canvas.width / 2, this.canvas.height / 2 + elemenHeight);
+        } else if (this.status === 'stop') {
+            this.ctx.fillText(this.options.crashedText, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
+            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, this.canvas.width / 2, this.canvas.height / 2 + elemenHeight);
+        }
     }
 
-    drawWaitingText() {
-        Object.assign(this.ctx, this.axisStyle, { font: "32px Verdana", strokeStyle: '#ffffff', fillStyle: '#ffffff' });
-        const elemenHeight = this.getElemenHeight(this.ctx.font) / 2;
-        this.ctx.fillText(this.options.waitingText, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
-        this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}s`, this.canvas.width / 2, this.canvas.height / 2 + elemenHeight);
-    }
-
-    drawChart(status: string = 'runing') {
+    drawChart() {
         this.point = Math.pow(Math.E, this.duration * this.BASE);
         this.calcScale();
         this.calcAxis();
 
         this.clear();
-        // this.ctx.save();
         this.drawLine();
         this.drawAxis();
-        if (status === 'runing') this.drawRuningText();
-        if (status === 'stop') this.drawStopText();
-        if (status === 'waiting') this.drawWaitingText();
+        this.drawText();
+        // this.ctx.save();
         // this.ctx.restore();
     }
 
@@ -236,15 +236,11 @@ class CrashChart {
         if (this.point >= this.maxPoint) this.stop(this.maxPoint);
     }
 
-    waitRender() {
-        this.rAFId = requestAnimationFrame(this.waitRender.bind(this));
-        this.drawChart('waiting');
-    }
-
     start(time: number = 0) {
         if (this.rendering || this.waiting) return;
         this.init(time);
         this.rAFId = requestAnimationFrame(this.render.bind(this));
+        this.status = 'runing';
         this.timerId = <any>setInterval(() => {
             this.duration += this.STEP;
         }, this.STEP_TIME);
@@ -256,7 +252,8 @@ class CrashChart {
         clearInterval(this.timerId);
 
         this.init(this.getDurationByCrashPoint(crashPoint || this.point));
-        this.drawChart('stop');
+        this.status = 'stop';
+        this.drawChart();
 
         this.rendering = false;
         this.waiting = false;
@@ -267,7 +264,8 @@ class CrashChart {
         this.waitTime = time * 1000 || 2000;
 
         this.init(0);
-        this.rAFId = requestAnimationFrame(this.waitRender.bind(this));
+        this.rAFId = requestAnimationFrame(this.render.bind(this));
+        this.status = 'waiting';
         this.timerId = <any>setInterval(() => {
             this.waitTime -= 10;
             if (this.waitTime <= 0) {
@@ -275,7 +273,7 @@ class CrashChart {
                 this.waitTime = 0;
                 cancelAnimationFrame(this.rAFId);
                 clearInterval(this.timerId);
-                this.drawChart('waiting');
+                this.drawChart();
             }
         }, 10);
         this.waiting = true;
@@ -290,7 +288,8 @@ class CrashChart {
         clearInterval(this.timerId);
 
         this.init(0);
-        this.drawChart('reset');
+        this.status = '';
+        this.drawChart();
 
         this.rendering = false;
         this.waiting = false;
