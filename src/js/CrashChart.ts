@@ -101,10 +101,10 @@ class CrashChart {
 
     init(time: number = 0) {
         this.duration = time;
-        this.point = this.getCrashPoint(this.duration);
+        this.point = this.getPointByDuration(this.duration);
     }
 
-    getCrashPoint(t: number) {
+    getPointByDuration(t: number) {
         return Math.pow(Math.E, t * this.BASE);
     }
 
@@ -155,7 +155,7 @@ class CrashChart {
         this.line_axis_point = [];
         for (let t = 0; t < this.duration; t += this.STEP_TIME) {
             const x = this.xScale * t;
-            const y = this.yScale * (this.getCrashPoint(t) * 100 - this.yAxisBase);
+            const y = this.yScale * (this.getPointByDuration(t) * 100 - this.yAxisBase);
             this.line_axis_point.push([x, this.canvas.height - y]);
         }
     }
