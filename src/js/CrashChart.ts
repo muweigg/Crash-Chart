@@ -63,7 +63,9 @@ class CrashChart {
             step: 110,
             stepTime: 70,
             maxPoint: 100,
-            width, height
+            crashedText: 'Crashed',
+            waitingText: 'Next Round in...',
+            width, height,
         }, options);
 
         this.canvas.width = this.options.width;
@@ -202,15 +204,15 @@ class CrashChart {
     drawStopText() {
         Object.assign(this.ctx, this.axisStyle, { font: "48px Verdana", strokeStyle: '#ff3737', fillStyle: '#ff3737' });
         const elemenHeight = this.getElemenHeight(this.ctx.font) / 2;
-        this.ctx.fillText(`Crashed`, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
+        this.ctx.fillText(this.options.crashedText, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
         this.ctx.fillText(`${String(this.point.toFixed(2))}x`, this.canvas.width / 2, this.canvas.height / 2 + elemenHeight);
     }
 
     drawWaitingText() {
         Object.assign(this.ctx, this.axisStyle, { font: "32px Verdana", strokeStyle: '#ffffff', fillStyle: '#ffffff' });
         const elemenHeight = this.getElemenHeight(this.ctx.font) / 2;
-        this.ctx.fillText(`Next Round in...`, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
-        this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}x`, this.canvas.width / 2, this.canvas.height / 2 + elemenHeight);
+        this.ctx.fillText(this.options.waitingText, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
+        this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}s`, this.canvas.width / 2, this.canvas.height / 2 + elemenHeight);
     }
 
     drawChart(status: string = 'runing') {
@@ -220,8 +222,8 @@ class CrashChart {
 
         this.clear();
         // this.ctx.save();
-        this.drawAxis();
         this.drawLine();
+        this.drawAxis();
         if (status === 'runing') this.drawRuningText();
         if (status === 'stop') this.drawStopText();
         if (status === 'waiting') this.drawWaitingText();
