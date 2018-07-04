@@ -52,6 +52,8 @@ class CrashChart {
     };
 
     jackpot: number = 0.00;
+    tokenImage: HTMLImageElement = new Image();
+    trophyImage: HTMLImageElement = new Image();
     img32: HTMLImageElement = new Image();
     img48: HTMLImageElement = new Image();
 
@@ -81,13 +83,15 @@ class CrashChart {
         this.STEP_TIME = this.options.stepTime;
         this.maxPoint = this.options.maxPoint;
         this.jackpot = this.options.jackpot;
-        this.img32.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAArFJREFUeNpi/P//P8NAAhZSNZxcXZgPpBqBmBuqf455aH8q3Rzwn+G/K5DiR3YT3ULg+KoCkHp7NOFjlDiAiSTf//9vAsQ8oHQDxZ+A+Aa6umMr84WB2IzqIQC0zBk9SVhHTPoHYhxdkccBpHyBOAaIPYG4CYhPUdkBDI7oDjiyPM8BamkoEPMhyZ2naggcWpYL8qEVmnAGENfg0HKBqg4ABr83kOJEExbBofyZffSUpxQ74MDibB4gFQQNYhcCZoHSwl4gXgzE68nOhvsWZYHEQHk9Foj9gZiLgBkXgXgJEC9zipv2jOJy4N///8uBVAgRencDcbFL/PTLlJQDjMh1we75mWxA6g0Q8xKh19A1cTpGQgOaoQmkOIBypOcCoO9t0Sz/C8S7gPgPNI/DwFcghvt857wMCSAVCU0rRkDsRVYU/IOkdBA4A43X5Z7JM19tn5t+Bk3faVCOAIoHQNOKC1qpeoosB/z/9/8KkNLySp11HSa2bXYaqOIxRNMnCsQvoDUiOrgN1P+WLAcANc7DkigdsNQZ2jjMA4VMJ1Vqw00zUuSBVDQQlxAw4x00uub4Zcy5TFE23Dg9WQBIhUEttsPbLAAWGSBLQYWOf+bcn1RpD/z79x8UhCoE9FwF5YjA7Hn3qdokWzslUY0Iy0FgRnDOfKpYjuIAYA7wRpMDNTTeA7ElehVMzUYpE3IZAMTfgHg+ENuE5C3QBNLCQMyAhH8A8QVqOoAFyQGgWiwwomDRZxB/xYQ4GSClhqb+LFD+N00cADR4IVr974BF/TEGKgOc5QAwTWCr/0/RzQH/6BQCjNi6Zou7o5WB1B0s6h8C8Rdo7UgIfIbWpiilZmzp0iCCIQB0lCMOQ+Up9PAUoqIA6AAnGvVF5xHnAAYGWjjgfEL58vPEhoAkvbrnAAEGAFsTCAHA+MK+AAAAAElFTkSuQmCC';
-        this.img48.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+VJREFUeNrMWVtIVFEUvSNqZSUl1Ecvqq8iKIyoKNSypExNKxJn1BxrSkeoQKHotz56WNLDsIczo6ijmRqiJGVESmphTz8iw8gPA62PiMoKq9veeKg7473nvh8bFoe598yZvc45e+91zthYlmXUWFfdYe7Hh4B5gBnk81RAKKAGkMX3/fUZF1T9fiij0jj056M/At26GZ1MNQEOg02UXo8sS4CzAvECXUYBfdYl8D+GhAj0An7pRSBEo3GWAOYKvOuRMkCn/9B0wGyzViCe0oVGIKyj5uBWaDMBqYBYwAczYiBeRgDbAOtIWk0HRJHnv5XEigZZiMVtuFHg7VvOjC4lTjsAC3n6vtqQVfrThC3ELOfMYrC9BBQSx6NFhnpmVhbaTHm9A7BT4lBmEaDuf5uMoZ4bSuBeRQE6FwNI0CANY6C/MIRAe4VbLBil2gCgGoVegrNsQNdK3O5zz4EmQ2Iw0uwjoI6o08f4ICG3TB8pcdebH0kCMJPkeaVVG7VQM5ntdsCY7lrojidvEeZlwGQVYz8A+ABNgK+GijnILCkqnR+kFDcDCDBssspxu6SKybbyA3G4Qomua72aELh9ff80aOJEvveJSORZCk9gK0hsOYiKjdNsBWD7YGUN5+mLOqWFBCM6OCzzBLaAOIyZbBnnOYq4JxoSCNg+KDY7AFWAxuS88s/4sPWqK5WSlbgnsJmA3WS2YwQqcx+MO6oJgZYrLvyBJOIA5mp/Sn75EM8q0QL0KSCNOL1NYDU1Oy+HBs3+FGi2bHd7+lQIuNWAmzJlhGKzyb0Xai7bh8e+EY2yIN4j2VPdniHDDvVAOF2l0xj8lQAv4E1agVf/W4lbl3OjgoJRrmHKbSVOt2l5SyFIoKk0FytxCnE6UUIw8lk/wEOy2LAhlbjxkhMzTDZgFyBSwZioe+rJbHcxOlsAgYaLOSib76sY7zigWE/xRk+j4zVAqWExOsHoeAsnoQ6oItBrtPMBBG6c3zNJ5Hw7KHKE7GFMsBCuPABEYF3j4BvAB4gBnAt6F4wekfe80GwFoEAlBclhzCL19sKqL/igtiS7SE9JoJ4Aw66C5izmbUdh9WtuJ39JVoiIZudeIZpEgGViM4uqxwSOmCuJNLbU7AcQEHKeMBA733abToAu4Kj/f1ljBYSsqtgRLiLgdP0PTDUBmP010ERYrYBJJ8CIbp9+kQL3g4DXKs84/l0a5Bzxf9f8RFZx2t6p8Aygh71zHq1dLHkFfKfsuHXWMtYxr8wtxOLMh1nE+T/M+F2rdAIi/74YbW17j9W9l0dAPICNNA9VjU7ofTIDD/LRFnF+hFwKTLC/AgwAQYdZFxlmRfwAAAAASUVORK5CYII=';
+        this.tokenImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAhdJREFUeNpi/P//PwMhcHJ1YR2QqgJidiA+ZR7ab85AJGAhRhHQEe5Qw0HgOAMJgImQguMr83mAFpiDfArFx7GpIdsH//4z2AMpZmTzQMTRFflCQCoMiKOB+BwQ55NlAdDFjkjcF0BscWR53mQg7QnErFDx+RT44L8LElcYiFdiUXaWZAsOLMkxBFIpQKyPJMyKpuwOEC8F4mtEWbBvUbYCkIoC4hgg1sSh5zUQrwLiJU5xU08QnUz3LMzUxOcSUGgBcQgQb3GJn/6b5Hzw799/HywG/gBiLij/jFvijPUwyV3zM/iBVBAQiwDFu4mxwBvKPA/yPiga0CLv+I656WzQ1ANKmr5AzAHE1QR9sG12Gog+BMSZXqmzrkPF4tDUakOTqSCa+AmCFgAN/QOk6tCSZxCaWhc0/kNo+j9OdFm0aUayNDQVRaMlTxj4BcSgeJgDSnR+GXP/ERXJG6YlcQKprUDsAMSMWNR9gPpwaUDWvHekFHYs0Ah2AlKOeNS1BuXMn8xABmBBS0GgymEfEINKR+Qy/xgDmQBiwf9/OkCqCRppoMh7haTmN7S0ZKDEBw4RhYvBEbaiP9YAlHmQ1JwHyv2gyAKY4dDkiR4XxxkoABilKdA3zmhCl5f0RAsQMOdrTMlSrOUTI3Klv7g7CmThe2gkUwLuxpYuU8HwAbB6NKWC4SAwF2sQAX3jTAXD/wLxAhgHIMAA08y4KCJuPcAAAAAASUVORK5CYII=';
+        this.trophyImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAmxJREFUeNqslU1IVFEUgMeXLYyMWoT9LEYh6AeixKCFi6gpCydHCbJF4YyOM44TWa3aFbVo46IfpnnOjCNNLYIk0swwUnBtGxdJIQRq0A9EP0SBRby+A2/i+nwzvN50ho9z77vn3nPPPffcKTMMwyMykYtPo3Z5Spd5XzBZne9o+QZ+TkAd3BWfLhiEPdCoeiuTCJ7d7l6rfJMoJgvs7htUFhg7BaP5zqGQ/uVvBPj4rDBps7t74GXSGvRmyNnYZNV1lhwRUfyEJqgBv0SlMA4nG9r1hacDMZ32O9oh9IjF7gLUQissWnPwAmoOd/TNod9aQk9CgMVT6BjotJvRt6zJZb5clNUwY42ABBmnx7JdKy27Ej7BSwiYfdnhvPldtfvOfA0dh4dWB0mohARolokHjoRTs3I08Fo0/Wn0QYvdIlwGr6y35BaJPMlE96LG4A3sVEL/AQ3wqzGSnsKuXtowrtwo6U9BrRwndhPLHIiMpiMbUGegBXYoTn7DsJmr7XAMVijjC7JHuOaPZmaX1YFVHqcjUhfPYYuDypVLUX80mpmzG7R1IDKS6vSihmB3sWcB/E1d/TOFDAo6EHnU11luVuglqFaGJE9ybROBWP/XYuEVdZCXYT18BRWGTeaRZJu7sxedvHyOHIgMJTvOSRLhfEt84LrTp7XcqaHh8u127sBw50JzYvQg0b6K9SvMV7NC+v81ArP0g2b3KmyFUMlJHrwZ7DGrdhtUKUMf4JUU//GeXG8pEbRBnc33KpP10Osqgvs32tahPjrI08bWs3fe/3OS8bsPNAd/9j5Xt4gX3md4HP32F3PwR4ABAO8B45ucgnl+AAAAAElFTkSuQmCC';
 
         // get y, x axis spacing
         this.yAxisSpacing = 2 * this.getElemenHeight(this.axisStyle.font);
         this.xAxisSpacing = 2 * this.ctx.measureText("10000").width;
 
+        this.tokenImage.onload = this.reset.bind(this);
+        this.trophyImage.onload = this.reset.bind(this);
         this.reset();
     }
 
@@ -204,40 +208,42 @@ class CrashChart {
         this.ctx.stroke();
     }
 
+    drawJackpot() {
+
+        Object.assign(this.ctx, this.axisStyle, { font: "24px Verdana", strokeStyle: '#ffffff', fillStyle: '#ffffff' });
+        
+        const elemenHeight: number = this.getElemenHeight(this.ctx.font),
+            xAxis: number = this.canvas.width / 2,
+            text: string = `    Jackpot:    ${this.jackpot}`,
+            tw: number = this.ctx.measureText('    Jackpot:').width,
+            ttw: number = this.ctx.measureText(text).width;
+            
+        this.ctx.drawImage(this.trophyImage, xAxis - (ttw - tw) / 2 - this.tokenImage.width * 2 + this.tokenImage.width / 2 - 30, 9);
+        this.ctx.drawImage(this.tokenImage, xAxis - (ttw - tw) / 2 + this.tokenImage.width * 2 + this.tokenImage.width / 2 + 13, 8);
+        this.ctx.fillText(text, xAxis, elemenHeight);
+    }
+
     drawText() {
         const fontStyle: any = {
             'runing' : { font: "48px Verdana", strokeStyle: '#2ac26c', fillStyle: '#2ac26c' },
             'waiting': { font: "32px Verdana", strokeStyle: '#ffffff', fillStyle: '#ffffff' },
             'stop'   : { font: "48px Verdana", strokeStyle: '#ff3737', fillStyle: '#ff3737' },
         };
-        const imageStyle: any = {
-            'runing' : { offsetXAxis: 105, offsetYAxis: 44 },
-            'waiting': { offsetXAxis: 70, offsetYAxis: 38 },
-            'stop'   : { offsetXAxis: 105, offsetYAxis: 44 },
-        };
 
         Object.assign(this.ctx, this.axisStyle, fontStyle[this.status]);
+        
         const elemenHeight = this.getElemenHeight(this.ctx.font) / 2,
             xAxis = this.canvas.width / 2,
-            yAxis = this.canvas.height / 2,
-            text = `Jackpot:   ${this.jackpot}`,
-            tw:number = this.ctx.measureText('Jackpot:').width,
-            ttw = this.ctx.measureText(text).width;
+            yAxis = this.canvas.height / 2;
 
         if (this.status === 'runing') {
-            this.ctx.drawImage(this.img48, xAxis - (ttw - tw) / 2 + imageStyle[this.status].offsetXAxis, yAxis - elemenHeight - imageStyle[this.status].offsetYAxis);
-            this.ctx.fillText(text, xAxis, yAxis - elemenHeight);
-            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight);
+            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight / 2);
         } else if (this.status === 'waiting') {
-            this.ctx.drawImage(this.img32, xAxis - (ttw - tw) / 2 + imageStyle[this.status].offsetXAxis, yAxis - elemenHeight * 2 - imageStyle[this.status].offsetYAxis);
-            this.ctx.fillText(text, xAxis, yAxis - elemenHeight * 2.5);
-            this.ctx.fillText(this.options.waitingText, xAxis, yAxis - elemenHeight / 2);
-            this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}s`, xAxis, yAxis + elemenHeight * 1.5);
+            this.ctx.fillText(this.options.waitingText, xAxis, yAxis + elemenHeight / 2 - elemenHeight);
+            this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}s`, xAxis, yAxis + elemenHeight / 2 + elemenHeight);
         } else if (this.status === 'stop') {
-            this.ctx.drawImage(this.img48, xAxis - (ttw - tw) / 2 + imageStyle[this.status].offsetXAxis, yAxis - elemenHeight * 2 - imageStyle[this.status].offsetYAxis);
-            this.ctx.fillText(text, xAxis, yAxis - elemenHeight * 2);
-            this.ctx.fillText(this.options.crashedText, xAxis, yAxis);
-            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight * 2);
+            this.ctx.fillText(this.options.crashedText, xAxis, yAxis + elemenHeight / 2 - elemenHeight);
+            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight / 2 + elemenHeight);
         }
     }
 
@@ -249,6 +255,7 @@ class CrashChart {
         this.clear();
         this.drawLine();
         this.drawAxis();
+        this.drawJackpot();
         this.drawText();
         // this.ctx.save();
         // this.ctx.restore();
@@ -316,11 +323,11 @@ class CrashChart {
 
         this.init(0);
         this.status = '';
-        this.drawChart();
 
         this.rendering = false;
         this.waiting = false;
         this.jackpot = 0.00;
+        this.drawChart();
     }
 
     resize() {
