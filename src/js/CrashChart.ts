@@ -51,6 +51,8 @@ class CrashChart {
         fillStyle: "#C8C8C8"
     };
 
+    sync: Function = null;
+
     constructor(selector: string = '', options: any = {}) {
         this.container = document.querySelector(selector);
         this.canvas = document.createElement('canvas');
@@ -64,8 +66,10 @@ class CrashChart {
             step: 110,
             stepTime: 70,
             maxPoint: 100,
+            commonText: 'Jackpot',
             crashedText: 'Crashed',
             waitingText: 'Next Round in...',
+            sync: (point, status) => {},
         }, options);
 
         this.canvas.width = width;
@@ -74,6 +78,7 @@ class CrashChart {
         this.STEP = this.options.step;
         this.STEP_TIME = this.options.stepTime;
         this.maxPoint = this.options.maxPoint;
+        this.sync = this.options.sync;
 
         // get y, x axis spacing
         this.yAxisSpacing = 2 * this.getElemenHeight(this.axisStyle.font);
@@ -203,16 +208,21 @@ class CrashChart {
         };
 
         Object.assign(this.ctx, this.axisStyle, fontStyle[this.status]);
-        const elemenHeight = this.getElemenHeight(this.ctx.font) / 2;
+        const elemenHeight = this.getElemenHeight(this.ctx.font) / 2,
+            xAxis = this.canvas.width / 2,
+            yAxis = this.canvas.height / 2;
 
         if (this.status === 'runing') {
-            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, this.canvas.width / 2, this.canvas.height / 2);
+            this.ctx.fillText(this.options.commonText, xAxis, yAxis - elemenHeight);
+            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight);
         } else if (this.status === 'waiting') {
-            this.ctx.fillText(this.options.waitingText, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
-            this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}s`, this.canvas.width / 2, this.canvas.height / 2 + elemenHeight);
+            this.ctx.fillText(this.options.commonText, xAxis, yAxis - elemenHeight * 2.5);
+            this.ctx.fillText(this.options.waitingText, xAxis, yAxis - elemenHeight / 2);
+            this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}s`, xAxis, yAxis + elemenHeight * 1.5);
         } else if (this.status === 'stop') {
-            this.ctx.fillText(this.options.crashedText, this.canvas.width / 2, this.canvas.height / 2 - elemenHeight);
-            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, this.canvas.width / 2, this.canvas.height / 2 + elemenHeight);
+            this.ctx.fillText(this.options.commonText, xAxis, yAxis - elemenHeight * 2);
+            this.ctx.fillText(this.options.crashedText, xAxis, yAxis);
+            this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight * 2);
         }
     }
 
@@ -225,6 +235,7 @@ class CrashChart {
         this.drawLine();
         this.drawAxis();
         this.drawText();
+        this.sync(this.point, this.status);
         // this.ctx.save();
         // this.ctx.restore();
     }

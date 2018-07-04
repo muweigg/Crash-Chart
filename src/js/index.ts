@@ -8,9 +8,14 @@ const stoped: HTMLElement = document.querySelector('button:nth-of-type(2)');
 const wait: HTMLElement = document.querySelector('button:nth-of-type(3)');
 const reset: HTMLElement = document.querySelector('button:nth-of-type(4)');
 const clear: HTMLElement = document.querySelector('button:nth-of-type(5)');
+const jackpot: HTMLElement = document.querySelector('div span');
 
 setTimeout(() => {
-    const crashChart = new window.CrashChart('.crash-chart');
+    const crashChart = new window.CrashChart('.crash-chart', {
+        sync: function (p, s) {
+            jackpot.innerHTML = p;
+        }
+    });
 
     start.addEventListener('click', () => {
         const val:number = parseInt(ms.value) || 0;
