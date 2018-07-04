@@ -8,14 +8,10 @@ const stoped: HTMLElement = document.querySelector('button:nth-of-type(2)');
 const wait: HTMLElement = document.querySelector('button:nth-of-type(3)');
 const reset: HTMLElement = document.querySelector('button:nth-of-type(4)');
 const clear: HTMLElement = document.querySelector('button:nth-of-type(5)');
-const jackpot: HTMLElement = document.querySelector('div span');
+const jackpot: HTMLElement = document.querySelector('button:nth-of-type(6)');
 
 setTimeout(() => {
-    const crashChart = new window.CrashChart('.crash-chart', {
-        sync: function (p, s) {
-            jackpot.innerHTML = p;
-        }
-    });
+    const crashChart = new window.CrashChart('.crash-chart');
 
     start.addEventListener('click', () => {
         const val:number = parseInt(ms.value) || 0;
@@ -39,6 +35,10 @@ setTimeout(() => {
 
     clear.addEventListener('click', () => {
         crashChart.clear();
+    });
+
+    jackpot.addEventListener('click', () => {
+        crashChart.jackpot += Math.floor(Math.random() * 9 + 1);
     });
 
 }, 0);

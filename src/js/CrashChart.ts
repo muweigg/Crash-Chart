@@ -51,7 +51,7 @@ class CrashChart {
         fillStyle: "#C8C8C8"
     };
 
-    sync: Function = null;
+    jackpot: number = 0.00;
 
     constructor(selector: string = '', options: any = {}) {
         this.container = document.querySelector(selector);
@@ -69,7 +69,7 @@ class CrashChart {
             commonText: 'Jackpot',
             crashedText: 'Crashed',
             waitingText: 'Next Round in...',
-            sync: (point, status) => {},
+            jackpot: 0.00,
         }, options);
 
         this.canvas.width = width;
@@ -78,7 +78,7 @@ class CrashChart {
         this.STEP = this.options.step;
         this.STEP_TIME = this.options.stepTime;
         this.maxPoint = this.options.maxPoint;
-        this.sync = this.options.sync;
+        this.jackpot = this.options.jackpot;
 
         // get y, x axis spacing
         this.yAxisSpacing = 2 * this.getElemenHeight(this.axisStyle.font);
@@ -213,14 +213,14 @@ class CrashChart {
             yAxis = this.canvas.height / 2;
 
         if (this.status === 'runing') {
-            this.ctx.fillText(this.options.commonText, xAxis, yAxis - elemenHeight);
+            this.ctx.fillText(`Jackpot: ${this.jackpot}`, xAxis, yAxis - elemenHeight);
             this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight);
         } else if (this.status === 'waiting') {
-            this.ctx.fillText(this.options.commonText, xAxis, yAxis - elemenHeight * 2.5);
+            this.ctx.fillText(`Jackpot: ${this.jackpot}`, xAxis, yAxis - elemenHeight * 2.5);
             this.ctx.fillText(this.options.waitingText, xAxis, yAxis - elemenHeight / 2);
             this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}s`, xAxis, yAxis + elemenHeight * 1.5);
         } else if (this.status === 'stop') {
-            this.ctx.fillText(this.options.commonText, xAxis, yAxis - elemenHeight * 2);
+            this.ctx.fillText(`Jackpot: ${this.jackpot}`, xAxis, yAxis - elemenHeight * 2);
             this.ctx.fillText(this.options.crashedText, xAxis, yAxis);
             this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight * 2);
         }
@@ -235,7 +235,6 @@ class CrashChart {
         this.drawLine();
         this.drawAxis();
         this.drawText();
-        this.sync(this.point, this.status);
         // this.ctx.save();
         // this.ctx.restore();
     }
@@ -304,6 +303,7 @@ class CrashChart {
 
         this.rendering = false;
         this.waiting = false;
+        this.jackpot = 0.00;
     }
 
     resize() {
