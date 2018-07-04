@@ -52,6 +52,8 @@ class CrashChart {
     };
 
     jackpot: number = 0.00;
+    img32: HTMLImageElement = new Image();
+    img48: HTMLImageElement = new Image();
 
     constructor(selector: string = '', options: any = {}) {
         this.container = document.querySelector(selector);
@@ -79,6 +81,8 @@ class CrashChart {
         this.STEP_TIME = this.options.stepTime;
         this.maxPoint = this.options.maxPoint;
         this.jackpot = this.options.jackpot;
+        this.img32.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAArFJREFUeNpi/P//P8NAAhZSNZxcXZgPpBqBmBuqf455aH8q3Rzwn+G/K5DiR3YT3ULg+KoCkHp7NOFjlDiAiSTf//9vAsQ8oHQDxZ+A+Aa6umMr84WB2IzqIQC0zBk9SVhHTPoHYhxdkccBpHyBOAaIPYG4CYhPUdkBDI7oDjiyPM8BamkoEPMhyZ2naggcWpYL8qEVmnAGENfg0HKBqg4ABr83kOJEExbBofyZffSUpxQ74MDibB4gFQQNYhcCZoHSwl4gXgzE68nOhvsWZYHEQHk9Foj9gZiLgBkXgXgJEC9zipv2jOJy4N///8uBVAgRencDcbFL/PTLlJQDjMh1we75mWxA6g0Q8xKh19A1cTpGQgOaoQmkOIBypOcCoO9t0Sz/C8S7gPgPNI/DwFcghvt857wMCSAVCU0rRkDsRVYU/IOkdBA4A43X5Z7JM19tn5t+Bk3faVCOAIoHQNOKC1qpeoosB/z/9/8KkNLySp11HSa2bXYaqOIxRNMnCsQvoDUiOrgN1P+WLAcANc7DkigdsNQZ2jjMA4VMJ1Vqw00zUuSBVDQQlxAw4x00uub4Zcy5TFE23Dg9WQBIhUEttsPbLAAWGSBLQYWOf+bcn1RpD/z79x8UhCoE9FwF5YjA7Hn3qdokWzslUY0Iy0FgRnDOfKpYjuIAYA7wRpMDNTTeA7ElehVMzUYpE3IZAMTfgHg+ENuE5C3QBNLCQMyAhH8A8QVqOoAFyQGgWiwwomDRZxB/xYQ4GSClhqb+LFD+N00cADR4IVr974BF/TEGKgOc5QAwTWCr/0/RzQH/6BQCjNi6Zou7o5WB1B0s6h8C8Rdo7UgIfIbWpiilZmzp0iCCIQB0lCMOQ+Up9PAUoqIA6AAnGvVF5xHnAAYGWjjgfEL58vPEhoAkvbrnAAEGAFsTCAHA+MK+AAAAAElFTkSuQmCC';
+        this.img48.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+VJREFUeNrMWVtIVFEUvSNqZSUl1Ecvqq8iKIyoKNSypExNKxJn1BxrSkeoQKHotz56WNLDsIczo6ijmRqiJGVESmphTz8iw8gPA62PiMoKq9veeKg7473nvh8bFoe598yZvc45e+91zthYlmXUWFfdYe7Hh4B5gBnk81RAKKAGkMX3/fUZF1T9fiij0jj056M/At26GZ1MNQEOg02UXo8sS4CzAvECXUYBfdYl8D+GhAj0An7pRSBEo3GWAOYKvOuRMkCn/9B0wGyzViCe0oVGIKyj5uBWaDMBqYBYwAczYiBeRgDbAOtIWk0HRJHnv5XEigZZiMVtuFHg7VvOjC4lTjsAC3n6vtqQVfrThC3ELOfMYrC9BBQSx6NFhnpmVhbaTHm9A7BT4lBmEaDuf5uMoZ4bSuBeRQE6FwNI0CANY6C/MIRAe4VbLBil2gCgGoVegrNsQNdK3O5zz4EmQ2Iw0uwjoI6o08f4ICG3TB8pcdebH0kCMJPkeaVVG7VQM5ntdsCY7lrojidvEeZlwGQVYz8A+ABNgK+GijnILCkqnR+kFDcDCDBssspxu6SKybbyA3G4Qomua72aELh9ff80aOJEvveJSORZCk9gK0hsOYiKjdNsBWD7YGUN5+mLOqWFBCM6OCzzBLaAOIyZbBnnOYq4JxoSCNg+KDY7AFWAxuS88s/4sPWqK5WSlbgnsJmA3WS2YwQqcx+MO6oJgZYrLvyBJOIA5mp/Sn75EM8q0QL0KSCNOL1NYDU1Oy+HBs3+FGi2bHd7+lQIuNWAmzJlhGKzyb0Xai7bh8e+EY2yIN4j2VPdniHDDvVAOF2l0xj8lQAv4E1agVf/W4lbl3OjgoJRrmHKbSVOt2l5SyFIoKk0FytxCnE6UUIw8lk/wEOy2LAhlbjxkhMzTDZgFyBSwZioe+rJbHcxOlsAgYaLOSib76sY7zigWE/xRk+j4zVAqWExOsHoeAsnoQ6oItBrtPMBBG6c3zNJ5Hw7KHKE7GFMsBCuPABEYF3j4BvAB4gBnAt6F4wekfe80GwFoEAlBclhzCL19sKqL/igtiS7SE9JoJ4Aw66C5izmbUdh9WtuJ39JVoiIZudeIZpEgGViM4uqxwSOmCuJNLbU7AcQEHKeMBA733abToAu4Kj/f1ljBYSsqtgRLiLgdP0PTDUBmP010ERYrYBJJ8CIbp9+kQL3g4DXKs84/l0a5Bzxf9f8RFZx2t6p8Aygh71zHq1dLHkFfKfsuHXWMtYxr8wtxOLMh1nE+T/M+F2rdAIi/74YbW17j9W9l0dAPICNNA9VjU7ofTIDD/LRFnF+hFwKTLC/AgwAQYdZFxlmRfwAAAAASUVORK5CYII=';
 
         // get y, x axis spacing
         this.yAxisSpacing = 2 * this.getElemenHeight(this.axisStyle.font);
@@ -206,21 +210,32 @@ class CrashChart {
             'waiting': { font: "32px Verdana", strokeStyle: '#ffffff', fillStyle: '#ffffff' },
             'stop'   : { font: "48px Verdana", strokeStyle: '#ff3737', fillStyle: '#ff3737' },
         };
+        const imageStyle: any = {
+            'runing' : { offsetXAxis: 105, offsetYAxis: 44 },
+            'waiting': { offsetXAxis: 70, offsetYAxis: 38 },
+            'stop'   : { offsetXAxis: 105, offsetYAxis: 44 },
+        };
 
         Object.assign(this.ctx, this.axisStyle, fontStyle[this.status]);
         const elemenHeight = this.getElemenHeight(this.ctx.font) / 2,
             xAxis = this.canvas.width / 2,
-            yAxis = this.canvas.height / 2;
+            yAxis = this.canvas.height / 2,
+            text = `Jackpot:   ${this.jackpot}`,
+            tw:number = this.ctx.measureText('Jackpot:').width,
+            ttw = this.ctx.measureText(text).width;
 
         if (this.status === 'runing') {
-            this.ctx.fillText(`Jackpot: ${this.jackpot}`, xAxis, yAxis - elemenHeight);
+            this.ctx.drawImage(this.img48, xAxis - (ttw - tw) / 2 + imageStyle[this.status].offsetXAxis, yAxis - elemenHeight - imageStyle[this.status].offsetYAxis);
+            this.ctx.fillText(text, xAxis, yAxis - elemenHeight);
             this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight);
         } else if (this.status === 'waiting') {
-            this.ctx.fillText(`Jackpot: ${this.jackpot}`, xAxis, yAxis - elemenHeight * 2.5);
+            this.ctx.drawImage(this.img32, xAxis - (ttw - tw) / 2 + imageStyle[this.status].offsetXAxis, yAxis - elemenHeight * 2 - imageStyle[this.status].offsetYAxis);
+            this.ctx.fillText(text, xAxis, yAxis - elemenHeight * 2.5);
             this.ctx.fillText(this.options.waitingText, xAxis, yAxis - elemenHeight / 2);
             this.ctx.fillText(`${String((this.waitTime / 1000).toFixed(2))}s`, xAxis, yAxis + elemenHeight * 1.5);
         } else if (this.status === 'stop') {
-            this.ctx.fillText(`Jackpot: ${this.jackpot}`, xAxis, yAxis - elemenHeight * 2);
+            this.ctx.drawImage(this.img48, xAxis - (ttw - tw) / 2 + imageStyle[this.status].offsetXAxis, yAxis - elemenHeight * 2 - imageStyle[this.status].offsetYAxis);
+            this.ctx.fillText(text, xAxis, yAxis - elemenHeight * 2);
             this.ctx.fillText(this.options.crashedText, xAxis, yAxis);
             this.ctx.fillText(`${String(this.point.toFixed(2))}x`, xAxis, yAxis + elemenHeight * 2);
         }
@@ -247,7 +262,7 @@ class CrashChart {
 
     start(time: number = 0) {
         if (this.rendering) return;
-        if (this.waiting) this.reset();
+        if (this.waiting) this.stopTimer();
         this.init(time);
         this.rAFId = requestAnimationFrame(this.render.bind(this));
         this.status = 'runing';
@@ -258,8 +273,7 @@ class CrashChart {
     }
 
     stop(crashPoint: number = 0) {
-        cancelAnimationFrame(this.rAFId);
-        clearInterval(this.timerId);
+        this.stopTimer();
 
         this.init(this.getDurationByPoint(crashPoint || this.point));
         this.status = 'stop';
@@ -267,6 +281,11 @@ class CrashChart {
 
         this.rendering = false;
         this.waiting = false;
+    }
+
+    stopTimer() {
+        cancelAnimationFrame(this.rAFId);
+        clearInterval(this.timerId);
     }
 
     wait(time: number) {
@@ -281,8 +300,7 @@ class CrashChart {
             if (this.waitTime <= 0) {
                 this.waiting = false;
                 this.waitTime = 0;
-                cancelAnimationFrame(this.rAFId);
-                clearInterval(this.timerId);
+                this.stopTimer();
                 this.drawChart();
             }
         }, 10);
@@ -294,8 +312,7 @@ class CrashChart {
     }
 
     reset() {
-        cancelAnimationFrame(this.rAFId);
-        clearInterval(this.timerId);
+        this.stopTimer();
 
         this.init(0);
         this.status = '';
