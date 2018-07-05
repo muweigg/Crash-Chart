@@ -220,7 +220,7 @@ class CrashChart {
             totalWidth: number = this.ctx.measureText(text).width;
 
         this.ctx.drawImage(this.trophyImage, xAxis - totalWidth / 2, 9);
-        this.ctx.drawImage(this.tokenImage, xAxis + Math.abs(totalWidth / 2 - (tw + spacingWidth)) + this.tokenImage.width / 4, 8);
+        this.ctx.drawImage(this.tokenImage, xAxis + Math.abs(totalWidth / 2 - (tw + spacingWidth)) + spacingWidth / 2 - this.tokenImage.width / 2, 8);
         this.ctx.fillText(text, xAxis, elemenHeight);
     }
 
