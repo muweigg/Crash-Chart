@@ -70,7 +70,7 @@ class CrashChart {
             step: 110,
             stepTime: 70,
             maxPoint: 100,
-            commonText: 'Jackpot',
+            commonText: 'Jackpot:',
             crashedText: 'Crashed',
             waitingText: 'Next Round in...',
             jackpot: 0.00,
@@ -214,12 +214,13 @@ class CrashChart {
         
         const elemenHeight: number = this.getElemenHeight(this.ctx.font),
             xAxis: number = this.canvas.width / 2,
-            text: string = `    Jackpot:    ${this.jackpot}`,
-            tw: number = this.ctx.measureText('    Jackpot:').width,
-            ttw: number = this.ctx.measureText(text).width;
-            
-        this.ctx.drawImage(this.trophyImage, xAxis - (ttw - tw) / 2 - this.tokenImage.width * 2 + this.tokenImage.width / 2 - 30, 9);
-        this.ctx.drawImage(this.tokenImage, xAxis - (ttw - tw) / 2 + this.tokenImage.width * 2 + this.tokenImage.width / 2 + 13, 8);
+            text: string = `    ${this.options.commonText}    ${this.jackpot}`,
+            spacingWidth: number = this.ctx.measureText(`    `).width,
+            tw: number = this.ctx.measureText(`${this.options.commonText}`).width,
+            totalWidth: number = this.ctx.measureText(text).width;
+
+        this.ctx.drawImage(this.trophyImage, xAxis - totalWidth / 2, 9);
+        this.ctx.drawImage(this.tokenImage, xAxis + Math.abs(totalWidth / 2 - (tw + spacingWidth)) + this.tokenImage.width / 4, 8);
         this.ctx.fillText(text, xAxis, elemenHeight);
     }
 
